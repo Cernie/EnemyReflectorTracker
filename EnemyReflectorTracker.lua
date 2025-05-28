@@ -90,7 +90,13 @@ end
 function ReflectorTracker_isSpellOnCd(spell)
 	local gameTime = GetTime();
 	--local _,_, latency = GetNetStats();
-	local spellId = ReflectorTracker_getSpellId(spell);
+	local subSpell = string.find(spell, "%(");
+	local spellTest = spell;
+	if(subSpell ~= nil) then 
+		subSpell = string.sub(spell, 1, string.find(spell, "%(") - 1);
+		spellTest = subSpell;
+	end
+	local spellId = ReflectorTracker_getSpellId(spellTest);
 	local start,duration,_ = GetSpellCooldown(spellId, BOOKTYPE_SPELL);
 	local cdT = start + duration - gameTime;
 	--latency = latency / 1000;
