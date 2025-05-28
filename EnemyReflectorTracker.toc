@@ -1,0 +1,7 @@
+## Interface 11200
+## Title Enemy Reflector Tracker
+## Notes Displays icon when enemy uses a reflector trinket
+## Author Cernie
+## Version 1.0
+EnemyReflectorTracker.lua
+EnemyReflectorTracker.xml
