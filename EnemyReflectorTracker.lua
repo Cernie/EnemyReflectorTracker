@@ -52,15 +52,15 @@ end
 
 -- Reflector spell effect lookup
 reflectorSpells = {
-    ["Hyper-Radiant Flame Reflector"] = {
+    ["fire"] = {
         effectText = "gains Fire Reflector", -- what shows in combat log
         texture = "Interface\\Icons\\Spell_Fire_FireArmor"
     },
-    ["Gyrofreeze Ice Reflector"] = {
+    ["frost"] = {
         effectText = "gains Frost Reflector",
         texture = "Interface\\Icons\\Spell_Frost_FrostWard"
     },
-    ["Ultra-Flash Shadow Reflector"] = {
+    ["shadow"] = {
         effectText = "gains Shadow Reflector",
         texture = "Interface\\Icons\\Spell_Shadow_AntiShadow"
     }
@@ -70,4 +70,13 @@ reflectorSpells = {
 function iconFrame_Show()
 	iconFrame_startTime = GetTime()
 	iconFrame:Show()
+end
+
+--Allows for a shorter macro
+function ReflectorCast(refelctorType, spell)
+	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[refelctorType].texture) ~=nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
+		SpellStopCasting()
+	else
+		CastSpellByName(spell)
+	end
 end
