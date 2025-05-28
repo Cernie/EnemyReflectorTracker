@@ -73,8 +73,8 @@ function iconFrame_Show()
 end
 
 --Allows for a shorter macro
-function ReflectorCast(refelctorType, spell)
-	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[refelctorType].texture) ~=nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
+function ReflectorCast(reflectorType, spell)
+	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[reflectorType].texture) ~=nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
 		SpellStopCasting()
 	else
 		CastSpellByName(spell)
