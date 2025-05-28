@@ -24,8 +24,8 @@ function ReflectorTracker_OnLoad()
 	
 	-- Countdown timer
 	iconFrame:SetScript("OnUpdate", function()
-		local elapsed = GetTime() - iconFrame_startTime
-		if elapsed >= 5 then
+		ReflectorTracker_elapsed = GetTime() - iconFrame_startTime
+		if ReflectorTracker_elapsed >= 5 then
 			iconFrame:Hide()
 			nameText:SetText("")
 		end
@@ -73,10 +73,42 @@ function iconFrame_Show()
 end
 
 --Allows for a shorter macro
-function ReflectorCast(reflectorType, spell)
-	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[reflectorType].texture) ~=nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
-		SpellStopCasting()
+function ReflectorCast(reflectorType, spell, options)
+	local castTime = options.castTime or nil
+	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[reflectorType].texture) ~= nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
+		if(castTime ~= nil and CastingBarFrame.casting ~= 1 and CastingBarFrame.channeling ~= 1 and castTime > (5 - ReflectorTracker_elapsed)) then
+			CastSpellByName(spell)
+		elseif(CastingBarFrame.casting == 1 and not ReflectorTracker_isSpellOnCd(spell) and castTime < (5 - ReflectorTracker_elapsed)) then
+			SpellStopCasting()
+		end
 	else
 		CastSpellByName(spell)
 	end
 end
+
+--Function to determine if spell or ability is on Cooldown, returns true or false. (For experimental mode that checks the cd based on your latency: uncomment the commented lines, and comment out the last return line)
+function ReflectorTracker_isSpellOnCd(spell)
+	local gameTime = GetTime();
+	--local _,_, latency = GetNetStats();
+	local spellId = ReflectorTracker_getSpellId(spell);
+	local start,duration,_ = GetSpellCooldown(spellId, BOOKTYPE_SPELL);
+	local cdT = start + duration - gameTime;
+	--latency = latency / 1000;
+	--return (duration > latency);
+	return (duration ~= 0);
+end;
+
+--returns id of a spell from player's spellbook
+function ReflectorTracker_getSpellId(spell)
+	local i = 1
+	while true do
+	   local spellName, spellRank = GetSpellName(i, BOOKTYPE_SPELL)
+	   if not spellName then
+		  do break end
+	   end
+	   if string.find(string.lower(spellName), string.lower(spell)) == 1 then
+	   return i; end;
+	   i = i + 1
+	end
+	return nil;
+end;
