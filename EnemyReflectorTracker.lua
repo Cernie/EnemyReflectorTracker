@@ -74,13 +74,14 @@ end
 
 --Allows for a shorter macro
 function ReflectorCast(reflectorType, spell, options)
+	local castTime = nil;
 	if(options ~= nil) then
-		local castTime = options.castTime or nil
+		castTime = options.castTime
 	end
 	if(iconFrame:IsShown() ~= nil and string.find(iconTexture:GetTexture(), reflectorSpells[reflectorType].texture) ~= nil and string.find(nameText:GetText(), UnitName("target")) ~= nil) then 
 		if(castTime ~= nil and CastingBarFrame.casting ~= 1 and CastingBarFrame.channeling ~= 1 and castTime > (5 - ReflectorTracker_elapsed)) then
 			CastSpellByName(spell)
-		elseif(CastingBarFrame.casting == 1 and not ReflectorTracker_isSpellOnCd(spell) and castTime < (5 - ReflectorTracker_elapsed)) then
+		elseif(CastingBarFrame.casting == 1 and not ReflectorTracker_isSpellOnCd(spell) and (castTime == nil or castTime < (5 - ReflectorTracker_elapsed))) then
 			SpellStopCasting()
 		end
 	else
